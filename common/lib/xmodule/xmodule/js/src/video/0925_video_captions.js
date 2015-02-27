@@ -3,8 +3,9 @@
 // VideoOverlayCaptions module.
 define(
 'video/0925_video_captions.js',
+'draggabilly'
 [],
-function () {
+function ($, Draggabilly) {
 
     var VideoOverlayCaptions = function (state) {
         if (!(this instanceof VideoOverlayCaptions)) {

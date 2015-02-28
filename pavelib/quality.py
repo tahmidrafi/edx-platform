@@ -213,7 +213,11 @@ def run_pep8(options):
 
     print("Number of pep8 violations: {count}".format(count=count))
     if count:
-        raise Exception("Failed. Too many pep8 violations.")
+        raise Exception(
+            "Too many pep8 violations. Number of violations found: {count}.".format(
+                count=count
+            )
+        )
 
 
 def _count_pep8_violations(report_file):

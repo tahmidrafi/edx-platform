@@ -194,22 +194,24 @@ def _count_pylint_violations(report_file):
 @needs('pavelib.prereqs.install_python_prereqs')
 @cmdopts([
     ("system=", "s", "System to act on"),
-    ("limit=", "l", "limit for number of acceptable violations"),
 ])
 def run_pep8(options):
     """
-    Run pep8 on system code. When violations limit is passed in,
-    fail the task if too many violations are found.
+    Run pep8 on system code.
+    Fail the task if any violations are found.
     """
     options = _parse(options)
-    count = 0
+
+    report_dir = (Env.REPORT_DIR / 'pep8')
+    report_dir.rmtree(ignore_errors=True)
+    report_dir.makedirs_p()
 
     for system in options['systems']:
-        report_dir = (Env.REPORT_DIR / system).makedirs_p()
-        sh('pep8 {system} | tee {report_dir}/pep8.report'.format(system=system, report_dir=report_dir))
-        count += _count_pep8_violations(
-            "{report_dir}/pep8.report".format(report_dir=report_dir)
-        )
+        sh('pep8 {system} | tee {report_dir}/pep8.report -a'.format(system=system, report_dir=report_dir))
+
+    count = _count_pep8_violations(
+        "{report_dir}/pep8.report".format(report_dir=report_dir)
+    )
 
     print("Number of pep8 violations: {count}".format(count=count))
     if count:
